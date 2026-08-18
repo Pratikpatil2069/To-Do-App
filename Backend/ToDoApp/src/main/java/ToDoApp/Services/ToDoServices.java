@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import ToDoApp.LocalException.ResourceException;
 import ToDoApp.Model.ToDoModel;
 import ToDoApp.Repository.ToDoRepository;
 
@@ -23,16 +24,19 @@ public class ToDoServices {
 	}
 	
 	public ToDoModel getTaskById(String id) {
-		return toDoRepository.findById(id).orElse(null);
+		return toDoRepository.findById(id).orElseThrow(()->new ResourceException("Task not found by id: "+id));
 	}
 	
-	public void deleteTaskById(String id) {
-		 toDoRepository.deleteById(id);
+	public ToDoModel deleteTaskById(String id) {
+		ToDoModel toDoModel=toDoRepository.findById(id).orElseThrow(()->new ResourceException("Task not found by id: "+id));
+		toDoRepository.deleteById(id);
+		return toDoModel;
+		
 	}
 	
 	public ToDoModel updateTaskById(String id, ToDoModel toDoModel) {
-		ToDoModel old=toDoRepository.findById(id).orElse(null);
-		if(old!=null) {
+		ToDoModel old=toDoRepository.findById(id).orElseThrow(()->new ResourceException("Task not found by id: "+id));
+		
 			old.setId(toDoModel.getId());
 			old.setTitle(toDoModel.getTitle());
 			old.setDescription(toDoModel.getDescription());
@@ -42,8 +46,6 @@ public class ToDoServices {
 			old.setCreatedAt(toDoModel.getCreatedAt());
 			
 			return toDoRepository.save(old);
-		}else {
-			return toDoRepository.save(toDoModel);
-		}
+	
 	}
 }

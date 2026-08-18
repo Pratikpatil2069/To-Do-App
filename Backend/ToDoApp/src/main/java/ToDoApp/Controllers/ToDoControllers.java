@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ToDoApp.Model.ToDoModel;
 import ToDoApp.Services.ToDoServices;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/ToDo")
@@ -23,7 +24,7 @@ public class ToDoControllers {
 	private ToDoServices toDoServices;
 	
 	@PostMapping("/addTask")
-	public ToDoModel addTask(@RequestBody ToDoModel toDoModel) {
+	public ToDoModel addTask(@Valid @RequestBody ToDoModel toDoModel) {
 		return toDoServices.addTask(toDoModel);
 	}
 	
@@ -43,7 +44,7 @@ public class ToDoControllers {
 	}
 	
 	@PutMapping("/updateTaskById/{id}")
-	public ToDoModel updateTask(@PathVariable String id, @RequestBody ToDoModel toDoModel) {
+	public ToDoModel updateTask(@PathVariable String id, @Valid @RequestBody ToDoModel toDoModel) {
 		return toDoServices.updateTaskById(id,toDoModel);
 	}
 }
